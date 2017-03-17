@@ -1,0 +1,165 @@
+{{extend 'layout.html'}}
+
+{{block head}}
+<head>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+
+
+    </style>
+</head>
+
+<script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script>
+    var listings_url= "{{=URL('get_listings')}}";
+    var del_listing_url = "{{=URL('del_listing', user_signature=True)}}";
+</script>
+{{end}}
+
+
+<div id="vue-div" style="display:none">
+    <div style="display:none">
+        ${auto_name = '{{=get_name()}}'}
+        ${auto_email = '{{=get_email()}}'}
+        ${auto_phone = '{{=get_phone()}}'}
+    </div>
+
+    <form action="{{=URL('default', 'add')}}" class="form-horizontal center" enctype="multipart/form-data" method="post">
+        Contact Information <br/>
+        <input name="name" type="text" v-model="form_name" placeholder="Name" /><br />
+        <input name="email" type="text" v-model="form_email" placeholder="E-Mail" /><br />
+        <input name="phone" type="text" v-model="form_phone" placeholder="Phone Number" /><br />
+
+        <input type="button" class="btn btn-success" value="AUTO" v-on:click="form_name = auto_name, form_email=auto_email, form_phone=auto_phone"/>
+        <input type="button" class="btn btn-danger" value="CLEAR" v-on:click="form_name = null, form_email=null, form_phone=null"/> <br/>
+
+        Post Title <br/>
+        <input name="title" type="text" placeholder="Title"> <br/>
+
+        Type of Post <br/>
+        <select title="options" name="listing_type" v-model="selected">
+            <option value="carpool">Carpool</option>
+            <option value="housing">Housing</option>
+            <option value="vehicles">Vehicles</option>
+        </select> <br/>
+
+        <div v-if=" selected === 'carpool' ">
+            <input name="start_date" type="date"/> Start date
+            <input name="end_date" type="date"/> End date <br/>
+            <input name="start_time" type="time"/> Start time
+            <input name="end_time" type="time"/> End time <br/>
+            Every:
+            <input name="monday" type="checkbox"> M
+            <input name="tuesday" type="checkbox"> Tu
+            <input name="wednesday" type="checkbox"> W
+            <input name="thursday" type="checkbox"> Th
+            <input name="friday" type="checkbox"> F
+            <input name="saturday" type="checkbox"> Sat
+            <input name="sunday" type="checkbox"> Sun <br/>
+
+            From <input name="location_from" type="text" placeholder="City or Address"> <br/>
+            To <input name="location_to" type="text" placeholder="City or Address"> <br/>
+            Mile differential<input name="mileage_difference" type="text" placeholder="# miles">
+            <abbr title="Estimated number of miles you'd be willing to go out of your way">
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+            </abbr>
+        </div>
+
+        <div v-if=" selected === 'housing' ">
+
+            Short-Term Options
+            <input name="housing_type" type="radio" value="rent" v-model="form_housing"/>rent
+            <input name="housing_type" type="radio" value="lease" v-model="form_housing"/>lease
+
+            <br/>
+            Long-Term Options
+            <input name="housing_type" type="radio" value="buy" v-model="form_housing"/>buy
+            <input name="housing_type" type="radio" value="sell" v-model="form_housing"/>sell
+            <input name="housing_type" type="radio" value="swap" v-model="form_housing"/>swap
+
+            <div v-if=" form_housing === 'rent' || form_housing === 'lease' ">
+                Start date <input name="start_date" type="date"/>
+                End date <input name="end_date" type="date"/> <br/>
+            </div>
+
+            <div v-if=" form_housing === 'buy' || form_housing === 'rent' || form_housing === 'swap' ">
+                Location Desired <input name="housing_desired" type="text" placeholder="City or Address">
+            </div>
+
+            <div v-if=" form_housing === 'sell' || form_housing === 'lease' || form_housing === 'swap' ">
+                Location Available <input name="housing_available" type="text" placeholder="City or Address">
+            </div>
+
+            <div v-if=" form_housing === 'rent' ">
+                Budget per month<input name="money" type="text" placeholder="$$$">
+            </div>
+
+            <div v-if=" form_housing === 'lease'">
+                Price per month<input name="money" type="text" placeholder="$$$">
+            </div>
+
+            <div v-if=" form_housing === 'buy' || form_housing === 'swap' ">
+                Budget <input name="money" type="text" placeholder="$$$">
+            </div>
+
+            <div v-if=" form_housing === 'sell' || form_housing === 'swap' ">
+                Price <input name="money" type="text" placeholder="$$$">
+            </div>
+
+        </div>
+
+        <div v-if=" selected === 'vehicles' ">
+            Powered by:
+            <input name="v_type" type="radio" value="engine" v-model="form_vtype"> Engine
+            <input name="v_type" type="radio" value="human" v-model="form_vtype"> Human
+
+            <div v-if="form_vtype === 'engine' ">
+                <input name="v_etype" type="radio" value="gas" > Gas
+                <input name="v_etype" type="radio" value="electric" > Electric
+                <input name="v_etype" type="radio" value="hybrid" > Hybrid <br/>
+
+                <input name="v_bors" type="radio" value="buy" > buy
+                <input name="v_bors" type="radio" value="sell" > sell <br/>
+                Model <input name="v_model" type="text" placeholder="Name">
+                Year <input name="v_year" type="text" placeholder="Number"> <br/>
+                Price <input name="v_price" type="text" placeholder="$$$">
+            </div>
+
+            <div v-if="form_vtype === 'human' ">
+                <input name="v_etype" type="radio" value="bike" > Bike
+                <input name="v_etype" type="radio" value="scooter" > Scooter
+                <input name="v_etype" type="radio" value="skateboard" > Skateboard <br/>
+
+                <input name="v_bors" type="radio" value="buy" > buy
+                <input name="v_bors" type="radio" value="sell" > sell <br/>
+                Price <input name="v_price" type="text" placeholder="$$$">
+            </div>
+
+        </div>
+
+        Extra Info <br/>
+
+        <div>
+            <textarea name="description" placeholder="Description">
+
+            </textarea>
+        </div>
+
+        <div>
+            Images <input type="file" name="picture" accept="image/*">
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Submit" onclick="{{URL('default', 'index')}}" />
+
+    </form>
+
+</div>
+
+<a href="{{=URL('default', 'index')}}" class="btn btn-default">
+            Back
+</a>
+
+<script src="{{=URL('static', 'js/default_index.js')}}"></script>

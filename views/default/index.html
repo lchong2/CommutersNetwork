@@ -1,0 +1,81 @@
+{{extend 'layout.html'}}
+
+{{block head}}
+<head>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <style>
+
+
+
+    </style>
+</head>
+
+<script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script>
+    var listings_url= "{{=URL('get_listings')}}";
+    var del_listing_url = "{{=URL('del_listing', user_signature=True)}}";
+</script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+
+{{end}}
+
+
+{{if auth.user_id:}}
+
+    <div class=" text-right">
+        <a href="{{=URL('default', 'add')}}" class="btn btn-warning">
+            <i class="fa fa-plus"></i> New Post
+        </a>
+    </div>
+
+{{else:}}
+    Please login to make a new listing!
+
+    <div class="text-right">
+        <a href="{{=URL('default', 'user', args=['login'])}}" class="btn btn-warning">Log In</a>
+    </div>
+
+{{pass}}
+
+<div id="vue-div" style="display:none">
+
+<input type="text" placeholder="search terms" v-model="search_string"> </input>
+<button class="btn btn-success" v-on:click="search_it"><i class="fa fa-search fa-lg"></i></button>
+
+Point of Interest<input type="text" placeholder="Address or City" v-model="poi"> </input> <br/>
+
+
+{{if listings == 'none':}}
+        <div class="text-left">No listings yet</div>
+{{else:}}
+Listings
+    <div v-for="l in listings">
+
+        ${l.title}<br/>
+        ${l.name}<br/>
+        ${l.housing_available}<br/>
+        distance from POI: ${l.distance}<br/>
+      <!--  ${l.whatever} <br/>         -->
+
+
+
+        <img v-bind:src="l.picture_url" width="100px"/>
+
+        <div v-if="{{=auth.user_id}} === l.user_id">
+            <!-- <i class="fa fa-pencil-o" v-on:click="edit_listing(l._idx)"></i> -->
+            <i class="fa fa-trash-o" v-on:click="del_listing(l._idx)"></i>
+        </div>
+
+
+    </div>
+
+{{pass}}
+
+</div>
+
+
+<script src="{{=URL('static', 'js/default_index.js')}}"></script>
