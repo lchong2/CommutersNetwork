@@ -48,6 +48,7 @@ var app = function() {
 
     self.get_distance = function(listing_idx) {
         var origin = self.vue.listings[listing_idx].housing_available;
+
         var destination = self.vue.poi;
         var service = new google.maps.DistanceMatrixService();
 

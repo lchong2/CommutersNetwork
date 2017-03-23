@@ -6,8 +6,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
+    #contact {
+        position:absolute;
+        width: 300px;
+        left:155px;
+        top: 40px;
+    }
 
+    #post_type {
+        position: absolute;
+        width: 400px;
+        left: 110px;
+        top: 220px;
+    }
 
+    #additional {
+        position: absolute;
+        width: 300px;
+        right: 600px;
+        top: 50px;
+    }
+
+    #backbutton {
+        position: absolute;
+        top: 500px;
+    }
+
+    #submitbutton {
+        position: absolute;
+        top: 500px;
+        left: 475px;
+    }
+
+    textarea {
+        height: 175px;
+        width: 300px;
+    }
 
     </style>
 </head>
@@ -28,6 +62,7 @@
     </div>
 
     <form action="{{=URL('default', 'add')}}" class="form-horizontal center" enctype="multipart/form-data" method="post">
+        <div id="contact">
         Contact Information <br/>
         <input name="name" type="text" v-model="form_name" placeholder="Name" /><br />
         <input name="email" type="text" v-model="form_email" placeholder="E-Mail" /><br />
@@ -35,7 +70,9 @@
 
         <input type="button" class="btn btn-success" value="AUTO" v-on:click="form_name = auto_name, form_email=auto_email, form_phone=auto_phone"/>
         <input type="button" class="btn btn-danger" value="CLEAR" v-on:click="form_name = null, form_email=null, form_phone=null"/> <br/>
+        </div>
 
+        <div id="post_type">
         Post Title <br/>
         <input name="title" type="text" placeholder="Title"> <br/>
 
@@ -47,8 +84,8 @@
         </select> <br/>
 
         <div v-if=" selected === 'carpool' ">
-            <input name="start_date" type="date"/> Start date
-            <input name="end_date" type="date"/> End date <br/>
+            From <input name="start_date" type="date"/> to
+            <input name="end_date" type="date"/> <br/>
             <input name="start_time" type="time"/> Start time
             <input name="end_time" type="time"/> End time <br/>
             Every:
@@ -94,15 +131,15 @@
             </div>
 
             <div v-if=" form_housing === 'rent' ">
-                Budget per month<input name="money" type="text" placeholder="$$$">
+                Budget per month<input name="money_r" type="text" placeholder="$$$">
             </div>
 
             <div v-if=" form_housing === 'lease'">
-                Price per month<input name="money" type="text" placeholder="$$$">
+                Price per month<input name="money_l" type="text" placeholder="$$$">
             </div>
 
             <div v-if=" form_housing === 'buy' || form_housing === 'swap' ">
-                Budget <input name="money" type="text" placeholder="$$$">
+                Budget <input name="money_b" type="text" placeholder="$$$">
             </div>
 
             <div v-if=" form_housing === 'sell' || form_housing === 'swap' ">
@@ -139,26 +176,26 @@
             </div>
 
         </div>
+        </div>
 
-        Extra Info <br/>
+        <div id="additional">
+        Additional Information <br/>
 
-        <div>
-            <textarea name="description" placeholder="Description">
+
+            <textarea name="description" placeholder="Description" >
 
             </textarea>
-        </div>
 
-        <div>
+
+            <br/>
             Images <input type="file" name="picture" accept="image/*">
         </div>
-
-        <input class="btn btn-primary" type="submit" value="Submit" onclick="{{URL('default', 'index')}}" />
-
+        <input id="submitbutton" class="btn btn-primary" type="submit" value="Submit" onclick="{{URL('default', 'index')}}" />
     </form>
 
 </div>
 
-<a href="{{=URL('default', 'index')}}" class="btn btn-default">
+<a id="backbutton" href="{{=URL('default', 'index')}}" class="btn btn-default">
             Back
 </a>
 

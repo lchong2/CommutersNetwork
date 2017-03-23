@@ -101,6 +101,9 @@ def add():
             housing_desired=request.vars.housing_desired,
             housing_available=request.vars.housing_available,
             money=request.vars.money,
+            money_b=request.vars.money_b,
+            money_l=request.vars.money_l,
+            money_r=request.vars.money_r,
             v_type=request.vars.v_type,
             ve_type=request.vars.ve_type,
             vbors=request.vars.vbors,
@@ -143,7 +146,19 @@ def get_listings():
     t = request.vars.q.strip()
     if request.vars.q:
         q = ((db.listing.title.contains(t)) |
-              db.listing.description.contains(t))
+              db.listing.description.contains(t) |
+              db.listing.name.contains(t) |
+              db.listing.listing_type.contains(t) |
+              db.listing.housing_type.contains(t) |
+              db.listing.money.contains(t) |
+              db.listing.money_r.contains(t) |
+              db.listing.money_l.contains(t) |
+              db.listing.money_b.contains(t) |
+              db.listing.v_price.contains(t) |
+              db.listing.location_to.contains(t)|
+              db.listing.location_from.contains(t)|
+              db.listing.housing_desired.contains(t)|
+              db.listing.housing_available.contains(t))
     else:
         q = db.listing.id > 0
     listings = db(q).select(db.listing.ALL, orderby=~db.listing.created_on)

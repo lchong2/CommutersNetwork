@@ -7,7 +7,11 @@
 
 
     <style>
-
+        #image {
+            position: relative;
+            left: 500px;
+            bottom:100px;
+        }
 
 
     </style>
@@ -28,7 +32,7 @@
 
     <div class=" text-right">
         <a href="{{=URL('default', 'add')}}" class="btn btn-warning">
-            <i class="fa fa-plus"></i> New Post
+            <i class="fa fa-plus"></i> New
         </a>
     </div>
 
@@ -44,7 +48,7 @@
 <div id="vue-div" style="display:none">
 
 <input type="text" placeholder="search terms" v-model="search_string"> </input>
-<button class="btn btn-success" v-on:click="search_it"><i class="fa fa-search fa-lg"></i></button>
+<button class="btn btn-info" v-on:click="search_it"><i class="fa fa-search fa-lg"></i></button>
 
 Point of Interest<input type="text" placeholder="Address or City" v-model="poi"> </input> <br/>
 
@@ -52,23 +56,101 @@ Point of Interest<input type="text" placeholder="Address or City" v-model="poi">
 {{if listings == 'none':}}
         <div class="text-left">No listings yet</div>
 {{else:}}
-Listings
+<h1>Listings</h1> <br/>
     <div v-for="l in listings">
-
-        ${l.title}<br/>
-        ${l.name}<br/>
-        ${l.housing_available}<br/>
-        distance from POI: ${l.distance}<br/>
-      <!--  ${l.whatever} <br/>         -->
-
-
-
-        <img v-bind:src="l.picture_url" width="100px"/>
-
-        <div v-if="{{=auth.user_id}} === l.user_id">
-            <!-- <i class="fa fa-pencil-o" v-on:click="edit_listing(l._idx)"></i> -->
-            <i class="fa fa-trash-o" v-on:click="del_listing(l._idx)"></i>
+        <div v-if="l.listing_type === 'housing'">
+            <h3> ${l.title} </h3> <br/>
+            Listing Type: housing, ${l.housing_type} <br/>
+            By: ${l.name}<br/>
+            Address: ${l.housing_available}<br/>
+            Description: ${l.description}<br/>
+            <span v-if="l.housing_type === 'swap' || l.housing_type === 'swap'">
+                Budget: $${l.money_b}<br/>
+            </span>
+            <span v-if="l.housing_type === 'sell' || l.housing_type === 'swap'">
+                Price: $${l.money}<br/>
+            </span>
+            <span v-if="l.housing_type === 'rent'">
+                Budget per month: $${l.money_r}<br/>
+            </span>
+            <span v-if="l.housing_type === 'lease'">
+                Price per month: $${l.money_l}<br/>
+            </span>
+            distance from POI: ${l.distance}<br/>
+            <div v-if="l.email != null || l.phone != null">
+                Contact Information   | ${l.email} | ${l.phone}
+            </div>
+            Posted on: ${l.created_on}
+            <span v-if="l.picture_url != '/CommutersNetwork/default/default/download'">
+                <img id="image" v-bind:src="l.picture_url" width="200px"/>
+            </span>
         </div>
+
+        <div v-if="l.listing_type === 'carpool'">
+            <h3> ${l.title} </h3> <br/>
+            Listing Type: carpool <br/>
+            By: ${l.name}<br/>
+            Starting Location: ${l.location_from}<br/>
+            Ending Location: ${l.location_to}<br/>
+            Mile Differential: ${l.mileage_difference}<br/>
+            From: ${l.start_date}<br/>
+            To: ${l.end_date}<br/>
+            Start time: ${l.start_time} <br/>
+            End time: ${l.end_time} <br/>
+            Every:
+            <span v-if="l.monday === true">
+                Monday
+            </span>
+            <span v-if="l.tuesday === true">
+                Tuesday
+            </span>
+            <span v-if="l.wednesday === true">
+                Wednesday
+            </span>
+            <span v-if="l.thursday === true">
+                Thursday
+            </span>
+            <span v-if="l.friday === true">
+                Friday
+            </span>
+            <span v-if="l.saturday === true">
+                Saturday
+            </span>
+            <span v-if="l.sunday === true">
+                Sunday
+            </span>
+            <br/>
+            Description: ${l.description}<br/>
+            distance from POI: ${l.distance}<br/>
+            <div v-if="l.email != null || l.phone != null">
+                Contact Information   | ${l.email} | ${l.phone}
+            </div>
+            Posted on: ${l.created_on}
+            <span v-if="l.picture_url != '/CommutersNetwork/default/default/download'">
+                <img id="image" v-bind:src="l.picture_url" width="200px"/>
+            </span>
+
+        </div>
+
+        <div v-if="l.listing_type === 'vehicles'">
+            <h3> ${l.title} </h3> <br/>
+            Listing Type: vehicles, ${l.v_type} ${l.ve_type} ${l.vbors} <br/>
+            By: ${l.name}<br/>
+            Price: $${l.v_price}<br/>
+            Year: ${l.v_year}<br/>
+            Model: ${l.v_model}<br/>
+            Description: ${l.description}<br/>
+            <div v-if="l.email != null || l.phone != null">
+                Contact Information   | ${l.email} | ${l.phone}
+            </div>
+            Posted on: ${l.created_on}
+            <span v-if="l.picture_url != '/CommutersNetwork/default/default/download'">
+                <img id="image" v-bind:src="l.picture_url" width="200px"/>
+            </span>
+        </div>
+        <span v-if="{{=auth.user_id}} === l.user_id">
+            <i class="fa fa-trash-o" v-on:click="del_listing(l._idx)"></i>
+        </span>
 
 
     </div>

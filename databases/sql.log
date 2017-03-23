@@ -95,3 +95,10 @@ success!
 timestamp: 2017-03-17T10:16:14.695000
 ALTER TABLE listing ADD distance CHAR(512);
 success!
+timestamp: 2017-03-23T11:23:24.208000
+ALTER TABLE listing ADD money_r CHAR(512);
+timestamp: 2017-03-23T11:23:24.393000
+ALTER TABLE listing ADD money_b CHAR(512);
+timestamp: 2017-03-23T11:23:24.528000
+ALTER TABLE listing ADD money_l CHAR(512);
+success!
